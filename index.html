@@ -5,32 +5,62 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Million Dollar Regret</title>
     <style>
-        body { margin:0; padding:0; background:#111; color:#ff4444; font-family:'Arial Black',sans-serif; text-align:center; min-height:100vh; }
-        .regret-button { width:380px; height:380px; border-radius:50%; background:#220000; border:25px solid #ff4444; color:#fff; font-size:2.8em; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 0 80px #ff0000, inset 0 0 60px #440000; margin:30px 0; }
-        .regret-button:active { transform:scale(0.95); }
-        h1 { font-size:3.5em; margin:20px 0 10px; text-shadow:0 0 30px #ff0000; }
-        .counter { font-size:2.8em; margin:10px 0; letter-spacing:4px; }
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #111;
+            color: #ff4444;
+            font-family: 'Arial Black', sans-serif;
+            text-align: center;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .regret-button {
+            width: 380px;
+            height: 380px;
+            border-radius: 50%;
+            background: #220000;
+            border: 25px solid #ff4444;
+            color: #fff;
+            font-size: 2.8em;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 80px #ff0000, inset 0 0 60px #440000;
+            margin: 30px auto;
+            user-select: none;
+        }
+        .regret-button:active { transform: scale(0.95); }
+        h1 { font-size: 3.5em; margin: 20px 0 10px; text-shadow: 0 0 30px #ff0000; }
+        .counter { font-size: 2.8em; margin: 10px 0; letter-spacing: 4px; }
+        .section { margin: 40px 0; }
     </style>
 </head>
 <body>
-    <h1>I REGRET BUYING THIS</h1>
-    <div class="regret-button" id="big-button">CLICK TO REGRET</div>
-    <div class="counter"><span id="regret-count">0</span> REGRETS</div>
-    <p>$1 per public admission of terrible decision-making</p>
+    <div class="container">
+        <h1>I REGRET BUYING THIS</h1>
+        <div class="regret-button" id="big-button">CLICK TO REGRET</div>
+        <div class="counter"><span id="regret-count">0</span> REGRETS</div>
+        <p>$1 per public admission of terrible decision-making</p>
 
-    <div id="wall-of-regret" style="max-width:800px; margin:30px auto;">
-        <strong>WALL OF REGRET:</strong><br><br>
-        <em>No regrets yet... be the first!</em>
-    </div>
+        <div class="section" id="wall-of-regret">
+            <strong>WALL OF REGRET:</strong><br><br>
+            <em>No regrets yet... be the first!</em>
+        </div>
 
-    <div style="max-width:800px; margin:40px auto;">
-        <h2 style="color:#ffaa00;">🏆 REGRET HALL OF FAME 🏆</h2>
-        <div id="leaderboard" style="background:#1a0000; padding:20px; border:4px solid #ffaa00; min-height:120px;">
-            <em>No legendary regretters yet...</em>
+        <div class="section">
+            <h2 style="color:#ffaa00;">🏆 REGRET HALL OF FAME 🏆</h2>
+            <div id="leaderboard" style="background:#1a0000; padding:20px; border:4px solid #ffaa00; min-height:120px;">
+                <em>No legendary regretters yet...</em>
+            </div>
         </div>
     </div>
 
-    <!-- Modal -->
+    <!-- Modal (same as before) -->
     <div id="regret-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:1000; align-items:center; justify-content:center;">
         <div style="background:#111; padding:30px; border:4px solid #ff4444; max-width:500px; width:90%;">
             <h2 style="color:#ffaa00;">Buy Regrets</h2>
@@ -64,7 +94,7 @@
 
         function updateTotal() {
             const qty = parseInt(quantityInput.value) || 1;
-            document.getElementById('total-price').textContent = `$${(qty * 1).toFixed(2)}`;
+            document.getElementById('total-price').textContent = `$${(qty).toFixed(2)}`;
         }
 
         function closeModal() {
@@ -75,7 +105,6 @@
             const qty = parseInt(quantityInput.value) || 1;
             const name = document.getElementById('regret-name').value.trim() || "Anonymous";
             const message = document.getElementById('regret-message').value.trim() || "Multiple regrets...";
-            
             closeModal();
             alert(`Processing $${qty}.00 with Stripe... (Demo)`);
 
