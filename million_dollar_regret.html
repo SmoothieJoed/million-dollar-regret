@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Million Dollar Regret</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #111;
+            color: #ff4444;
+            font-family: 'Arial Black', sans-serif;
+            text-align: center;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        .regret-button {
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            background: #220000;
+            border: 20px solid #ff4444;
+            color: #fff;
+            font-size: 2.5em;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 80px #ff0000,
+                        inset 0 0 60px #440000;
+            transition: all 0.1s;
+            user-select: none;
+        }
+        .regret-button:active {
+            transform: scale(0.95);
+            box-shadow: 0 0 40px #ff0000;
+        }
+        h1 {
+            font-size: 4em;
+            margin-bottom: 10px;
+            text-shadow: 0 0 30px #ff0000;
+        }
+        .counter {
+            font-size: 3em;
+            margin: 20px 0;
+            letter-spacing: 4px;
+        }
+        .wall {
+            margin-top: 40px;
+            max-width: 800px;
+            font-size: 0.9em;
+            opacity: 0.8;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>I REGRET BUYING THIS</h1>
+    <div class="regret-button" id="big-button">
+        CLICK TO REGRET
+    </div>
+    <div class="counter">
+        <span id="regret-count">487,291</span> REGRETS
+    </div>
+    <p style="max-width: 600px; opacity: 0.7;">$1 per public admission of terrible decision-making</p>
+    
+    <div class="wall" id="wall-of-regret">
+        <strong>WALL OF REGRET:</strong><br>
+        @crypto_bro420 - 3m ago<br>
+        Sarah K. - "I bought another one" - 11m ago<br>
+        anon_69420 - 42m ago
+    </div>
+
+    <div style="margin-top: 50px; max-width: 800px; width: 100%;">
+        <h2 style="color: #ffaa00; margin-bottom: 10px;">🏆 REGRET HALL OF FAME / LEADERBOARD 🏆</h2>
+        <div id="leaderboard" style="background: #1a0000; padding: 20px; border: 4px solid #ffaa00; text-align: left; font-size: 1.1em; max-height: 300px; overflow-y: auto;">
+            <!-- JS populated -->
+        </div>
+    </div>
+
+    <!-- Regret Purchase Modal -->
+    <div id="regret-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; align-items: center; justify-content: center;">
+        <div style="background: #111; padding: 30px; border: 4px solid #ff4444; max-width: 500px; width: 90%; text-align: left; color: #fff;">
+            <h2 style="margin-top: 0; color: #ffaa00;">Make Your Regret Official</h2>
+            <p>$1.00 — One Public Regret</p>
+            
+            <label style="display: block; margin: 15px 0 5px;">Your Name / Username</label>
+            <input id="regret-name" type="text" placeholder="e.g. CryptoClown88" style="width: 100%; padding: 10px; background: #222; border: 1px solid #ff4444; color: #fff; font-size: 1em;">
+            
+            <label style="display: block; margin: 15px 0 5px;">Your Regret Message</label>
+            <textarea id="regret-message" placeholder="I regret buying this stupid pixel..." style="width: 100%; height: 100px; padding: 10px; background: #222; border: 1px solid #ff4444; color: #fff; font-size: 1em; resize: vertical;"></textarea>
+            
+            <div style="margin-top: 20px; text-align: center;">
+                <button onclick="processPayment()" style="background: #ffaa00; color: #000; padding: 15px 40px; font-size: 1.3em; border: none; cursor: pointer; font-weight: bold;">PAY $1 WITH STRIPE</button>
+                <button onclick="closeModal()" style="margin-left: 10px; background: #444; color: #fff; padding: 15px 25px; font-size: 1em; border: none; cursor: pointer;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let count = 487291;
+        let totalRevenue = 487291; // Simulate $
+        const countEl = document.getElementById('regret-count');
+        const button = document.getElementById('big-button');
+        
+        // Funny tiers
+        const tiers = [
+            { min: 1, label: "Casual Regretter", emoji: "😔" },
+            { min: 5, label: "Repeat Offender", emoji: "🙃" },
+            { min: 20, label: "Professional Idiot", emoji: "🤡" },
+            { min: 50, label: "Regret Lord", emoji: "👑" },
+            { min: 100, label: "Supreme Masochist", emoji: "💀" },
+            { min: 500, label: "Legendary Dumbass", emoji: "🏆🔥" }
+        ];
+
+        function getTier(spent) {
+            for (let i = tiers.length - 1; i >= 0; i--) {
+                if (spent >= tiers[i].min) return tiers[i];
+            }
+            return tiers[0];
+        }
+
+        // Sample leaderboard data
+        let leaderboard = [
+            { name: "ElonRegrets", spent: 1240, msg: "Should've bought more Doge" },
+            { name: "CryptoClown88", spent: 890, msg: "This is my 47th regret today" },
+            { name: "KarenFromHR", spent: 420, msg: "I regret clicking this" },
+            { name: "PixelPirate", spent: 250, msg: "Worth every penny... wait no" },
+        ];
+
+        function renderLeaderboard() {
+            const lb = document.getElementById('leaderboard');
+            lb.innerHTML = '<strong>TOP REGRETTERS OF ALL TIME</strong><br><br>';
+            
+            leaderboard.forEach((entry, index) => {
+                const tier = getTier(entry.spent);
+                const div = document.createElement('div');
+                div.style.marginBottom = '12px';
+                div.innerHTML = `
+                    <strong>#${index+1} ${tier.emoji} ${entry.name}</strong> 
+                    <span style="color:#ffaa00">($${entry.spent})</span> — ${tier.label}<br>
+                    <small>"${entry.msg}"</small>
+                `;
+                lb.appendChild(div);
+            });
+        }
+
+        function playTrombone() {
+            console.log("🎺 Womp womp...");
+        }
+        
+        button.addEventListener('click', () => {
+            document.getElementById('regret-modal').style.display = 'flex';
+        });
+
+        function closeModal() {
+            document.getElementById('regret-modal').style.display = 'none';
+        }
+
+        function processPayment() {
+            const name = document.getElementById('regret-name').value.trim() || "Anonymous Regretter";
+            const message = document.getElementById('regret-message').value.trim() || "I have no self control";
+            
+            closeModal();
+            
+            // Simulate Stripe processing
+            const processing = alert("🔄 Processing payment with Stripe...\n\n(This is a demo — no real charge)");
+            
+            count++;
+            totalRevenue++;
+            countEl.textContent = count.toLocaleString();
+            playTrombone();
+            
+            // Add to wall with real data
+            const wall = document.getElementById('wall-of-regret');
+            const entry = document.createElement('div');
+            entry.innerHTML = `<strong>${name}</strong> — "${message}" <span style="opacity:0.6">- just now</span>`;
+            wall.appendChild(entry);
+            wall.scrollTop = wall.scrollHeight;
+
+            // Chance to hit leaderboard
+            if (Math.random() > 0.7) {
+                leaderboard.unshift({
+                    name: name,
+                    spent: Math.floor(Math.random() * 80) + 5,
+                    msg: message
+                });
+                if (leaderboard.length > 8) leaderboard.pop();
+                renderLeaderboard();
+            }
+        }
+        
+        // Fake live activity
+        setInterval(() => {
+            count += Math.floor(Math.random() * 3) + 1;
+            totalRevenue += Math.floor(Math.random() * 2) + 1;
+            countEl.textContent = count.toLocaleString();
+        }, 900);
+
+        // Initial render
+        renderLeaderboard();
+    </script>
+</body>
+</html>
